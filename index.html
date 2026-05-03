@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>SIGNUM — Crypto Signals</title>
-<meta name="description" content="Free real-time crypto trading signals for Bitcoin, Ethereum, BNB, Solana and XRP. RSI, MACD, EMA indicators."/>
+<meta name="description" content="Free real-time crypto trading signals for Bitcoin, Ethereum, BNB, Solana, XRP and Dogecoin. RSI, MACD, EMA indicators."/>
 
 <!-- ============================================================
   GOOGLE ADSENSE — STEP 1:
@@ -12,7 +12,7 @@
   e.g. ca-pub-1234567890123456
   Then uncomment the script tag.
   ============================================================ -->
-<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID" crossorigin="anonymous"></script> -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6491297624312886" crossorigin="anonymous"></script>
 
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
 <style>
@@ -30,14 +30,18 @@
     --dim: #64748b;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html { font-size: 16px; }
 
   body {
     background: var(--bg);
     color: var(--text);
     font-family: 'Share Tech Mono', monospace;
     min-height: 100vh;
+    min-height: 100dvh;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
   }
 
   /* Scanline overlay */
@@ -67,9 +71,10 @@
     opacity: 0.4;
   }
 
+  /* ── HEADER ── */
   header {
     border-bottom: 1px solid var(--border);
-    padding: 20px 40px;
+    padding: 14px 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -77,23 +82,25 @@
     position: sticky;
     top: 0;
     z-index: 100;
+    gap: 12px;
   }
 
   .logo {
     font-family: 'Orbitron', monospace;
     font-weight: 900;
-    font-size: 1.6rem;
-    letter-spacing: 0.2em;
+    font-size: clamp(1.1rem, 4vw, 1.6rem);
+    letter-spacing: 0.15em;
     color: var(--amber);
     text-shadow: 0 0 20px rgba(245,158,11,0.4);
+    flex-shrink: 0;
   }
 
   .logo span {
     color: var(--text);
     font-weight: 400;
-    font-size: 0.7rem;
+    font-size: clamp(0.5rem, 1.8vw, 0.7rem);
     display: block;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.25em;
     margin-top: 2px;
     opacity: 0.6;
   }
@@ -101,19 +108,34 @@
   .header-right {
     display: flex;
     align-items: center;
-    gap: 20px;
-    font-size: 0.75rem;
+    gap: 10px;
+    font-size: 0.7rem;
     color: var(--dim);
+    flex-shrink: 0;
+  }
+
+  /* Hide "last updated" text on very small screens */
+  #last-updated {
+    color: var(--dim);
+    font-size: 0.65rem;
+    display: none;
+  }
+
+  .status-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
   }
 
   .status-dot {
-    width: 8px; height: 8px;
+    width: 7px; height: 7px;
     border-radius: 50%;
     background: var(--green);
     box-shadow: 0 0 8px var(--green);
     animation: pulse 2s infinite;
-    display: inline-block;
-    margin-right: 6px;
+    flex-shrink: 0;
   }
 
   @keyframes pulse {
@@ -121,23 +143,22 @@
     50% { opacity: 0.3; }
   }
 
-  #last-updated {
-    color: var(--dim);
-    font-size: 0.7rem;
-  }
-
   .refresh-btn {
     background: transparent;
     border: 1px solid var(--border);
     color: var(--amber);
-    padding: 6px 14px;
+    padding: 8px 14px;
     font-family: 'Share Tech Mono', monospace;
     font-size: 0.75rem;
     cursor: pointer;
     letter-spacing: 0.1em;
     transition: all 0.2s;
+    /* Bigger tap target on mobile */
+    min-height: 40px;
+    min-width: 40px;
+    touch-action: manipulation;
   }
-  .refresh-btn:hover {
+  .refresh-btn:hover, .refresh-btn:active {
     background: rgba(245,158,11,0.1);
     border-color: var(--amber);
     box-shadow: 0 0 10px rgba(245,158,11,0.2);
@@ -147,20 +168,21 @@
     cursor: not-allowed;
   }
 
+  /* ── MAIN ── */
   main {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 40px 20px;
+    padding: 20px 12px 24px;
   }
 
   .section-label {
-    font-size: 0.65rem;
-    letter-spacing: 0.3em;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
     color: var(--dim);
-    margin-bottom: 24px;
+    margin-bottom: 16px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
   }
   .section-label::after {
     content: '';
@@ -169,25 +191,27 @@
     background: var(--border);
   }
 
+  /* ── CARDS ── */
+  /* Mobile-first: single column, expands on wider screens */
   .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: 1fr;
     gap: 2px;
     background: var(--border);
     border: 1px solid var(--border);
-    margin-bottom: 40px;
+    margin-bottom: 24px;
   }
 
   .card {
     background: var(--bg2);
-    padding: 24px;
+    padding: 18px 16px 16px;
     position: relative;
     overflow: hidden;
     transition: background 0.2s;
     animation: fadeIn 0.5s ease both;
   }
 
-  .card:hover { background: var(--bg3); }
+  .card:active { background: var(--bg3); }
 
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(8px); }
@@ -206,59 +230,64 @@
     width: 3px;
     height: 100%;
   }
-  .card-accent.buy { background: var(--green); box-shadow: 2px 0 12px rgba(34,197,94,0.3); }
-  .card-accent.sell { background: var(--red); box-shadow: 2px 0 12px rgba(239,68,68,0.3); }
+  .card-accent.buy  { background: var(--green); box-shadow: 2px 0 12px rgba(34,197,94,0.3); }
+  .card-accent.sell { background: var(--red);   box-shadow: 2px 0 12px rgba(239,68,68,0.3); }
   .card-accent.hold { background: var(--amber); box-shadow: 2px 0 12px rgba(245,158,11,0.3); }
 
   .card-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 20px;
+    align-items: center;
+    margin-bottom: 14px;
   }
 
   .coin-name {
     font-family: 'Orbitron', monospace;
     font-weight: 700;
-    font-size: 1.1rem;
+    font-size: clamp(0.95rem, 3.5vw, 1.1rem);
     color: #e2e8f0;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
   }
 
   .coin-id {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     color: var(--dim);
     letter-spacing: 0.2em;
-    margin-top: 3px;
+    margin-top: 2px;
   }
 
   .signal-badge {
-    padding: 4px 12px;
+    padding: 5px 10px;
     font-family: 'Orbitron', monospace;
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-weight: 700;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.12em;
     border: 1px solid;
+    flex-shrink: 0;
   }
-  .signal-badge.buy { color: var(--green); border-color: var(--green); background: rgba(34,197,94,0.08); }
-  .signal-badge.sell { color: var(--red); border-color: var(--red); background: rgba(239,68,68,0.08); }
+  .signal-badge.buy  { color: var(--green); border-color: var(--green); background: rgba(34,197,94,0.08); }
+  .signal-badge.sell { color: var(--red);   border-color: var(--red);   background: rgba(239,68,68,0.08); }
   .signal-badge.hold { color: var(--amber); border-color: var(--amber); background: rgba(245,158,11,0.08); }
 
+  /* Price row: side by side on mobile */
   .price-row {
-    margin-bottom: 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
   }
 
   .price-main {
     font-family: 'Orbitron', monospace;
-    font-size: 1.5rem;
+    font-size: clamp(1.15rem, 5vw, 1.5rem);
     font-weight: 700;
     color: #f1f5f9;
     letter-spacing: 0.02em;
   }
 
   .price-change {
-    font-size: 0.8rem;
-    margin-top: 4px;
+    font-size: 0.75rem;
   }
   .price-change.pos { color: var(--green); }
   .price-change.neg { color: var(--red); }
@@ -266,43 +295,40 @@
   .indicators {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 18px;
+    gap: 8px;
+    margin-bottom: 14px;
   }
 
   .indicator {
     background: rgba(255,255,255,0.02);
     border: 1px solid var(--border);
-    padding: 10px 12px;
+    padding: 9px 10px;
   }
 
   .indicator-label {
-    font-size: 0.6rem;
+    font-size: 0.55rem;
     color: var(--dim);
-    letter-spacing: 0.2em;
+    letter-spacing: 0.15em;
     margin-bottom: 4px;
   }
 
-  .indicator-value {
-    font-size: 0.85rem;
-    color: var(--text);
-  }
+  .indicator-value { font-size: 0.8rem; }
   .indicator-value.overbought { color: var(--red); }
-  .indicator-value.oversold { color: var(--green); }
-  .indicator-value.neutral { color: var(--amber); }
-  .indicator-value.bullish { color: var(--green); }
-  .indicator-value.bearish { color: var(--red); }
+  .indicator-value.oversold   { color: var(--green); }
+  .indicator-value.neutral    { color: var(--amber); }
+  .indicator-value.bullish    { color: var(--green); }
+  .indicator-value.bearish    { color: var(--red); }
 
   .signal-reason {
-    font-size: 0.68rem;
+    font-size: 0.62rem;
     color: var(--dim);
-    line-height: 1.6;
+    line-height: 1.7;
     border-top: 1px solid var(--border);
-    padding-top: 14px;
-    letter-spacing: 0.05em;
+    padding-top: 12px;
+    letter-spacing: 0.04em;
   }
 
-  /* Loading state */
+  /* ── LOADING ── */
   .loading-overlay {
     position: fixed;
     inset: 0;
@@ -313,17 +339,15 @@
     justify-content: center;
     z-index: 9000;
     transition: opacity 0.5s;
+    padding: 20px;
   }
 
-  .loading-overlay.hidden {
-    opacity: 0;
-    pointer-events: none;
-  }
+  .loading-overlay.hidden { opacity: 0; pointer-events: none; }
 
   .loading-logo {
     font-family: 'Orbitron', monospace;
     font-weight: 900;
-    font-size: 2.5rem;
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
     color: var(--amber);
     letter-spacing: 0.3em;
     text-shadow: 0 0 40px rgba(245,158,11,0.5);
@@ -333,11 +357,11 @@
 
   @keyframes glow {
     from { text-shadow: 0 0 20px rgba(245,158,11,0.3); }
-    to { text-shadow: 0 0 60px rgba(245,158,11,0.8); }
+    to   { text-shadow: 0 0 60px rgba(245,158,11,0.8); }
   }
 
   .loading-bar-wrap {
-    width: 200px;
+    width: min(200px, 60vw);
     height: 2px;
     background: var(--border);
     overflow: hidden;
@@ -352,106 +376,82 @@
   }
 
   .loading-text {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     color: var(--dim);
     letter-spacing: 0.3em;
     margin-top: 16px;
+    text-align: center;
   }
 
-  /* Error state */
+  /* ── ERROR ── */
   .error-card {
     background: rgba(239,68,68,0.05);
     border: 1px solid rgba(239,68,68,0.3);
-    padding: 20px 24px;
+    padding: 16px;
     color: var(--red);
-    font-size: 0.8rem;
-    letter-spacing: 0.05em;
-    margin-bottom: 20px;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    margin-bottom: 16px;
+    line-height: 1.6;
   }
 
-  /* Disclaimer */
-  .disclaimer {
-    border: 1px solid var(--border);
-    padding: 16px 20px;
-    font-size: 0.65rem;
-    color: var(--muted);
-    line-height: 1.7;
-    letter-spacing: 0.05em;
-  }
-
-  .disclaimer strong {
-    color: var(--amber);
-    letter-spacing: 0.1em;
-  }
-
-  /* Skeleton */
-  .skeleton {
-    background: linear-gradient(90deg, var(--bg2) 25%, var(--bg3) 50%, var(--bg2) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    height: 14px;
-    margin-bottom: 8px;
-    border-radius: 2px;
-  }
-
-  @keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-
-  /* Summary bar */
+  /* ── SUMMARY ── */
   .summary-bar {
     display: flex;
     gap: 2px;
-    margin-bottom: 32px;
+    margin-bottom: 20px;
     background: var(--border);
   }
 
   .summary-item {
     flex: 1;
     background: var(--bg2);
-    padding: 14px 20px;
+    padding: 12px 8px;
     text-align: center;
   }
 
   .summary-count {
     font-family: 'Orbitron', monospace;
-    font-size: 1.6rem;
+    font-size: clamp(1.3rem, 6vw, 1.6rem);
     font-weight: 700;
     line-height: 1;
     margin-bottom: 4px;
   }
-  .summary-count.buy { color: var(--green); text-shadow: 0 0 20px rgba(34,197,94,0.4); }
-  .summary-count.sell { color: var(--red); text-shadow: 0 0 20px rgba(239,68,68,0.4); }
+  .summary-count.buy  { color: var(--green); text-shadow: 0 0 20px rgba(34,197,94,0.4); }
+  .summary-count.sell { color: var(--red);   text-shadow: 0 0 20px rgba(239,68,68,0.4); }
   .summary-count.hold { color: var(--amber); text-shadow: 0 0 20px rgba(245,158,11,0.4); }
 
   .summary-label {
-    font-size: 0.6rem;
+    font-size: 0.55rem;
     color: var(--dim);
-    letter-spacing: 0.25em;
+    letter-spacing: 0.2em;
   }
 
-  @media (max-width: 600px) {
-    header { padding: 16px 20px; }
-    .logo { font-size: 1.2rem; }
-    main { padding: 24px 12px; }
-    .price-main { font-size: 1.2rem; }
+  /* ── SKELETON ── */
+  .skeleton {
+    background: linear-gradient(90deg, var(--bg2) 25%, var(--bg3) 50%, var(--bg2) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    height: 14px; margin-bottom: 8px; border-radius: 2px;
+  }
+  @keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
   }
 
-  /* ── Google AdSense Zones ── */
+  /* ── ADS ── */
   .ad-banner {
     width: 100%;
     background: var(--bg2);
-    border: 1px solid var(--border);
-    border-style: dashed;
+    border: 1px dashed var(--border);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--muted);
     font-size: 0.6rem;
     letter-spacing: 0.2em;
-    margin-bottom: 28px;
-    min-height: 90px;
+    margin-bottom: 20px;
+    min-height: 80px;
     position: relative;
   }
 
@@ -463,7 +463,6 @@
     letter-spacing: 0.15em;
   }
 
-  /* Sticky footer ad */
   .ad-footer-sticky {
     position: fixed;
     bottom: 0; left: 0; right: 0;
@@ -472,28 +471,178 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 70px;
+    min-height: 60px;
     z-index: 200;
-    padding: 8px;
+    padding: 8px 48px 8px 8px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
   }
 
   .ad-footer-sticky .ad-close {
     position: absolute;
-    right: 12px; top: 50%;
+    right: 10px; top: 50%;
     transform: translateY(-50%);
     background: transparent;
     border: 1px solid var(--border);
     color: var(--dim);
     font-family: 'Share Tech Mono', monospace;
     font-size: 0.6rem;
-    padding: 4px 8px;
+    padding: 6px 10px;
     cursor: pointer;
     letter-spacing: 0.1em;
+    min-height: 36px;
+    touch-action: manipulation;
   }
-  .ad-footer-sticky .ad-close:hover { border-color: var(--amber); color: var(--amber); }
+  .ad-footer-sticky .ad-close:hover,
+  .ad-footer-sticky .ad-close:active { border-color: var(--amber); color: var(--amber); }
 
-  /* push content up so sticky footer doesn't overlap */
-  body.has-sticky-ad main { padding-bottom: 100px; }
+  body.has-sticky-ad main {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  }
+
+  /* ── DISCLAIMER ── */
+  .disclaimer {
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    font-size: 0.6rem;
+    color: var(--muted);
+    line-height: 1.8;
+    letter-spacing: 0.04em;
+  }
+  .disclaimer strong { color: var(--amber); letter-spacing: 0.1em; }
+
+  /* ── TOAST NOTIFICATIONS ── */
+  #toast-container {
+    position: fixed;
+    top: 70px; right: 12px;
+    z-index: 8000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: min(320px, calc(100vw - 24px));
+  }
+
+  .signal-toast {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid;
+    padding: 12px 36px 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+
+  .signal-toast.show { opacity: 1; transform: translateX(0); }
+
+  .toast-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+  .toast-body { flex: 1; min-width: 0; }
+
+  .toast-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #e2e8f0;
+    margin-bottom: 3px;
+  }
+
+  .toast-sub { font-size: 0.75rem; color: var(--text); }
+
+  .toast-close {
+    position: absolute;
+    right: 10px; top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--dim);
+    cursor: pointer;
+    font-size: 0.7rem;
+    padding: 4px;
+    touch-action: manipulation;
+  }
+
+  /* ── ALERT LOG ── */
+  .alert-log-wrap {
+    margin-bottom: 24px;
+  }
+
+  .alert-log-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  #alert-log {
+    border: 1px solid var(--border);
+    background: var(--bg2);
+  }
+
+  .alert-empty {
+    padding: 20px;
+    font-size: 0.65rem;
+    color: var(--dim);
+    letter-spacing: 0.2em;
+    text-align: center;
+  }
+
+  .alert-row {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.7rem;
+  }
+  .alert-row:last-child { border-bottom: none; }
+
+  .alert-time { color: var(--dim); font-size: 0.6rem; white-space: nowrap; }
+  .alert-coin { font-family: 'Orbitron', monospace; font-size: 0.7rem; font-weight: 700; color: #e2e8f0; }
+  .alert-change { display: flex; align-items: center; gap: 6px; font-size: 0.7rem; }
+  .alert-arrow { color: var(--dim); }
+  .alert-price { color: var(--dim); font-size: 0.65rem; text-align: right; white-space: nowrap; }
+
+  /* ── NOTIF BUTTON ── */
+  .notif-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--dim);
+    padding: 6px 12px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: all 0.2s;
+    min-height: 36px;
+    touch-action: manipulation;
+  }
+  .notif-btn.active { color: var(--green); border-color: var(--green); }
+  .notif-btn:hover { border-color: var(--amber); color: var(--amber); }
+  @media (min-width: 540px) {
+    header { padding: 16px 24px; }
+    main { padding: 28px 20px; }
+    #last-updated { display: block; }
+    .header-right { gap: 16px; }
+    .summary-item { padding: 14px 12px; }
+    .refresh-btn::after { content: ' REFRESH'; }
+  }
+
+  @media (min-width: 768px) {
+    header { padding: 20px 40px; }
+    main { padding: 40px 20px; }
+    .cards-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+    .card { padding: 24px; }
+    .card:hover { background: var(--bg3); }
+    .price-row { flex-direction: column; gap: 0; margin-bottom: 20px; }
+    .price-change { margin-top: 4px; }
+    .ad-footer-sticky { min-height: 70px; padding: 8px 56px; }
+    .summary-item { padding: 14px 20px; }
+  }
 </style>
 </head>
 <body>
@@ -507,15 +656,20 @@
   <div class="loading-text" id="loading-text">INITIALIZING...</div>
 </div>
 
+<!-- Toast container -->
+<div id="toast-container"></div>
+
 <header>
   <div class="logo">
     SIGNUM
     <span>CRYPTO SIGNAL INTELLIGENCE</span>
   </div>
   <div class="header-right">
-    <div><span class="status-dot"></span>LIVE</div>
+    <div class="status-pill"><span class="status-dot"></span>LIVE</div>
+    <div id="api-source" style="font-size:0.6rem;letter-spacing:0.1em;color:var(--dim);">SRC: —</div>
     <div id="last-updated">—</div>
-    <button class="refresh-btn" id="refresh-btn" onclick="loadData()">↻ REFRESH</button>
+    <button class="notif-btn" id="notif-btn" onclick="requestNotifPermission()">🔔 OFF</button>
+    <button class="refresh-btn" id="refresh-btn" onclick="loadData()">↻</button>
   </div>
 </header>
 
@@ -529,9 +683,17 @@
     <div class="summary-item"><div class="summary-count sell" id="sum-sell">—</div><div class="summary-label">SELL</div></div>
   </div>
 
-  <div class="section-label">SIGNAL FEED — TOP 5 ASSETS</div>
+  <div class="section-label">SIGNAL FEED — TOP 6 ASSETS</div>
   <div class="cards-grid" id="cards-grid">
     <!-- Cards injected here -->
+  </div>
+
+  <!-- Alert History Log -->
+  <div class="alert-log-wrap">
+    <div class="alert-log-header">
+      <div class="section-label" style="margin-bottom:0;flex:1">SIGNAL CHANGE ALERTS</div>
+    </div>
+    <div id="alert-log"></div>
   </div>
 
   <!-- ============================================================
@@ -578,12 +740,268 @@
 
 <script>
 const COINS = [
-  { id: 'bitcoin',  symbol: 'BTC', name: 'Bitcoin' },
-  { id: 'ethereum', symbol: 'ETH', name: 'Ethereum' },
-  { id: 'binancecoin', symbol: 'BNB', name: 'BNB' },
-  { id: 'solana',   symbol: 'SOL', name: 'Solana' },
-  { id: 'ripple',   symbol: 'XRP', name: 'XRP' },
+  { id: 'bitcoin',      symbol: 'BTC',  name: 'Bitcoin',  binance: 'BTCUSDT',  kraken: 'XXBTZUSD', coincap: 'bitcoin'      },
+  { id: 'ethereum',     symbol: 'ETH',  name: 'Ethereum', binance: 'ETHUSDT',  kraken: 'XETHZUSD', coincap: 'ethereum'     },
+  { id: 'binancecoin',  symbol: 'BNB',  name: 'BNB',      binance: 'BNBUSDT',  kraken: null,        coincap: 'binance-coin' },
+  { id: 'solana',       symbol: 'SOL',  name: 'Solana',   binance: 'SOLUSDT',  kraken: 'SOLUSD',   coincap: 'solana'       },
+  { id: 'ripple',       symbol: 'XRP',  name: 'XRP',      binance: 'XRPUSDT',  kraken: 'XXRPZUSD', coincap: 'xrp'          },
+  { id: 'dogecoin',     symbol: 'DOGE', name: 'Dogecoin', binance: 'DOGEUSDT', kraken: 'XDGUSD',   coincap: 'dogecoin'     },
 ];
+
+// ── API ROTATION ENGINE ──
+// Priority order: CoinGecko → CoinCap → Binance+Kraken combo
+// Each call tries next API on failure, logs which one succeeded
+
+const API_STATUS = { current: 'coingecko', failures: {} };
+
+async function fetchWithTimeout(url, ms = 8000) {
+  const ctrl = new AbortController();
+  const id = setTimeout(() => ctrl.abort(), ms);
+  try {
+    const r = await fetch(url, { signal: ctrl.signal });
+    clearTimeout(id);
+    return r;
+  } catch (e) { clearTimeout(id); throw e; }
+}
+
+// ── API 1: CoinGecko (prices + OHLC) ──
+async function fetchFromCoinGecko() {
+  const ids = COINS.map(c => c.id).join(',');
+  const priceRes = await fetchWithTimeout(
+    `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`
+  );
+  if (!priceRes.ok) throw new Error('CoinGecko price failed');
+  const priceData = await priceRes.json();
+
+  const ohlcAll = await Promise.all(COINS.map(c =>
+    fetchWithTimeout(`https://api.coingecko.com/api/v3/coins/${c.id}/ohlc?vs_currency=usd&days=30`)
+      .then(r => r.ok ? r.json() : [])
+      .catch(() => [])
+  ));
+
+  return COINS.map((coin, i) => ({
+    coin,
+    price: priceData[coin.id]?.usd ?? 0,
+    change24h: priceData[coin.id]?.usd_24h_change ?? 0,
+    closes: (ohlcAll[i] || []).map(c => c[4]),
+    source: 'CoinGecko'
+  }));
+}
+
+// ── API 2: CoinCap (prices + history) ──
+async function fetchFromCoinCap() {
+  const results = await Promise.all(COINS.map(async coin => {
+    const [assetRes, histRes] = await Promise.all([
+      fetchWithTimeout(`https://api.coincap.io/v2/assets/${coin.coincap}`),
+      fetchWithTimeout(`https://api.coincap.io/v2/assets/${coin.coincap}/history?interval=d1`)
+    ]);
+    const asset = assetRes.ok ? (await assetRes.json()).data : null;
+    const hist  = histRes.ok  ? (await histRes.json()).data  : [];
+    return {
+      coin,
+      price: asset ? parseFloat(asset.priceUsd) : 0,
+      change24h: asset ? parseFloat(asset.changePercent24Hr) : 0,
+      closes: hist.map(h => parseFloat(h.priceUsd)).filter(Boolean),
+      source: 'CoinCap'
+    };
+  }));
+  if (results.every(r => r.price === 0)) throw new Error('CoinCap returned no data');
+  return results;
+}
+
+// ── API 3: Binance (ticker) + Kraken (ohlc) ──
+async function fetchFromBinanceKraken() {
+  // Binance: batch price + 24h change
+  const binanceSymbols = COINS.filter(c => c.binance).map(c => `"${c.binance}"`).join(',');
+  const binanceRes = await fetchWithTimeout(
+    `https://api.binance.com/api/v3/ticker/24hr?symbols=[${binanceSymbols}]`
+  );
+  if (!binanceRes.ok) throw new Error('Binance ticker failed');
+  const binanceTickers = await binanceRes.json();
+  const binanceMap = {};
+  binanceTickers.forEach(t => { binanceMap[t.symbol] = t; });
+
+  // Kraken OHLC for coins that support it (others get empty closes)
+  const results = await Promise.all(COINS.map(async coin => {
+    const ticker = binanceMap[coin.binance];
+    const price    = ticker ? parseFloat(ticker.lastPrice) : 0;
+    const change24h = ticker ? parseFloat(ticker.priceChangePercent) : 0;
+
+    let closes = [];
+    if (coin.kraken) {
+      try {
+        const kRes = await fetchWithTimeout(
+          `https://api.kraken.com/0/public/OHLC?pair=${coin.kraken}&interval=1440`
+        );
+        if (kRes.ok) {
+          const kData = await kRes.json();
+          const key = Object.keys(kData.result || {}).find(k => k !== 'last');
+          if (key) closes = kData.result[key].map(r => parseFloat(r[4]));
+        }
+      } catch(e) {}
+    }
+    return { coin, price, change24h, closes, source: 'Binance/Kraken' };
+  }));
+
+  if (results.every(r => r.price === 0)) throw new Error('Binance returned no data');
+  return results;
+}
+
+// ── Rotation logic: try APIs in order, fall back on failure ──
+let apiIndex = 0;
+const API_PROVIDERS = [fetchFromCoinGecko, fetchFromCoinCap, fetchFromBinanceKraken];
+const API_NAMES     = ['CoinGecko', 'CoinCap', 'Binance/Kraken'];
+
+async function fetchAllData() {
+  const startIndex = apiIndex;
+  for (let attempt = 0; attempt < API_PROVIDERS.length; attempt++) {
+    const idx = (startIndex + attempt) % API_PROVIDERS.length;
+    try {
+      const data = await API_PROVIDERS[idx]();
+      apiIndex = idx; // stick with working API
+      updateApiIndicator(API_NAMES[idx], true);
+      return data;
+    } catch (err) {
+      console.warn(`API ${API_NAMES[idx]} failed:`, err.message);
+      updateApiIndicator(API_NAMES[idx], false);
+    }
+  }
+  throw new Error('All APIs failed. Check connection or try again later.');
+}
+
+function updateApiIndicator(name, ok) {
+  const el = document.getElementById('api-source');
+  if (el) {
+    el.textContent = `SRC: ${name}`;
+    el.style.color = ok ? 'var(--green)' : 'var(--red)';
+  }
+}
+
+// Track previous signals to detect changes
+const prevSignals = {};
+const alertHistory = [];
+let notifPermission = Notification?.permission ?? 'default';
+let isFirstLoad = true;
+
+// ── Audio beep for signal change ──
+function playBeep(type) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.frequency.value = type === 'buy' ? 880 : type === 'sell' ? 440 : 660;
+    osc.type = 'sine';
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+    osc.start(); osc.stop(ctx.currentTime + 0.4);
+  } catch(e) {}
+}
+
+// ── Browser push notification ──
+async function requestNotifPermission() {
+  if (!('Notification' in window)) return;
+  if (notifPermission === 'granted') return;
+  const result = await Notification.requestPermission();
+  notifPermission = result;
+  updateNotifBtn();
+}
+
+function sendNotif(title, body, type) {
+  if (notifPermission !== 'granted') return;
+  const icons = { buy: '🟢', sell: '🔴', hold: '🟡' };
+  new Notification(`${icons[type]} SIGNUM: ${title}`, { body, icon: '', tag: title });
+}
+
+function updateNotifBtn() {
+  const btn = document.getElementById('notif-btn');
+  if (!btn) return;
+  if (notifPermission === 'granted') {
+    btn.textContent = '🔔 ON';
+    btn.classList.add('active');
+  } else {
+    btn.textContent = '🔔 OFF';
+    btn.classList.remove('active');
+  }
+}
+
+// ── In-app toast ──
+function showToast(coin, oldSig, newSig) {
+  const colors = { buy: 'var(--green)', sell: 'var(--red)', hold: 'var(--amber)' };
+  const icons  = { buy: '▲', sell: '▼', hold: '◆' };
+  const toast = document.createElement('div');
+  toast.className = 'signal-toast';
+  toast.style.borderColor = colors[newSig];
+  toast.innerHTML = `
+    <span class="toast-icon" style="color:${colors[newSig]}">${icons[newSig]}</span>
+    <div class="toast-body">
+      <div class="toast-title">${coin} SIGNAL CHANGED</div>
+      <div class="toast-sub">${oldSig.toUpperCase()} → <span style="color:${colors[newSig]}">${newSig.toUpperCase()}</span></div>
+    </div>
+    <button class="toast-close" onclick="this.parentElement.remove()">✕</button>
+  `;
+  document.getElementById('toast-container').appendChild(toast);
+  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 6000);
+}
+
+// ── Alert history ──
+function addAlertHistory(coin, symbol, oldSig, newSig, price) {
+  const now = new Date();
+  alertHistory.unshift({
+    time: now.toLocaleTimeString('en-US', { hour12: false }),
+    date: now.toLocaleDateString('en-PH', { month: 'short', day: 'numeric' }),
+    coin, symbol, oldSig, newSig, price
+  });
+  if (alertHistory.length > 20) alertHistory.pop();
+  renderAlertHistory();
+}
+
+function renderAlertHistory() {
+  const el = document.getElementById('alert-log');
+  if (!el) return;
+  if (alertHistory.length === 0) {
+    el.innerHTML = '<div class="alert-empty">NO SIGNAL CHANGES YET — MONITORING...</div>';
+    return;
+  }
+  const colors = { buy: 'var(--green)', sell: 'var(--red)', hold: 'var(--amber)' };
+  el.innerHTML = alertHistory.map(a => `
+    <div class="alert-row">
+      <div class="alert-time">${a.date} ${a.time}</div>
+      <div class="alert-coin">${a.symbol}</div>
+      <div class="alert-change">
+        <span style="color:${colors[a.oldSig]}">${a.oldSig.toUpperCase()}</span>
+        <span class="alert-arrow">→</span>
+        <span style="color:${colors[a.newSig]}">${a.newSig.toUpperCase()}</span>
+      </div>
+      <div class="alert-price">${fmt(a.price)}</div>
+    </div>
+  `).join('');
+}
+
+// ── Signal change detection ──
+function detectSignalChanges(results) {
+  if (isFirstLoad) {
+    results.forEach(r => { prevSignals[r.coin.id] = r.signal; });
+    isFirstLoad = false;
+    return;
+  }
+  results.forEach(r => {
+    const prev = prevSignals[r.coin.id];
+    if (prev && prev !== r.signal) {
+      // Signal changed!
+      playBeep(r.signal);
+      showToast(r.coin.name, prev, r.signal);
+      sendNotif(
+        `${r.coin.symbol} → ${r.signal.toUpperCase()}`,
+        `${r.coin.name} signal changed from ${prev.toUpperCase()} to ${r.signal.toUpperCase()} at ${fmt(r.price)}`,
+        r.signal
+      );
+      addAlertHistory(r.coin.name, r.coin.symbol, prev, r.signal, r.price);
+    }
+    prevSignals[r.coin.id] = r.signal;
+  });
+}
 
 function calcRSI(prices, period = 14) {
   if (prices.length < period + 1) return null;
@@ -666,61 +1084,32 @@ async function loadData() {
   btn.disabled = true;
 
   const overlay = document.getElementById('loading-overlay');
-  overlay.classList.remove('hidden');
+  if (isFirstLoad) overlay.classList.remove('hidden');
   document.getElementById('loading-bar').style.width = '0%';
-
   document.getElementById('error-area').innerHTML = '';
-  document.getElementById('cards-grid').innerHTML = '';
 
-  setLoading(10, 'FETCHING MARKET DATA...');
+  setLoading(10, 'CONNECTING TO DATA SOURCE...');
 
   try {
-    // Fetch 30-day OHLC for each coin
-    const ids = COINS.map(c => c.id).join(',');
+    setLoading(30, 'FETCHING LIVE PRICES...');
+    const rawData = await fetchAllData();
 
-    setLoading(25, 'LOADING PRICE HISTORY...');
-
-    // Fetch current prices + 24h change
-    const priceRes = await fetch(
-      `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`
-    );
-    if (!priceRes.ok) throw new Error('Price API failed');
-    const priceData = await priceRes.json();
-
-    setLoading(50, 'CALCULATING INDICATORS...');
-
-    // Fetch OHLC for each coin (30 days)
-    const ohlcPromises = COINS.map(c =>
-      fetch(`https://api.coingecko.com/api/v3/coins/${c.id}/ohlc?vs_currency=usd&days=30`)
-        .then(r => r.json())
-        .catch(() => [])
-    );
-    const ohlcAll = await Promise.all(ohlcPromises);
-
-    setLoading(80, 'GENERATING SIGNALS...');
-
-    const results = COINS.map((coin, i) => {
-      const price = priceData[coin.id]?.usd ?? 0;
-      const change24h = priceData[coin.id]?.usd_24h_change ?? 0;
-      const ohlc = ohlcAll[i];
-      const closes = ohlc.map(c => c[4]);
-
-      const rsi = calcRSI(closes);
-      const macd = calcMACD(closes);
+    setLoading(70, 'CALCULATING INDICATORS...');
+    const results = rawData.map(({ coin, price, change24h, closes, source }) => {
+      const rsi   = calcRSI(closes);
+      const macd  = calcMACD(closes);
       const ema50 = calcEMA(closes, Math.min(50, closes.length));
-
       const { signal, reasons } = generateSignal(rsi, macd, price, ema50);
-
-      return { coin, price, change24h, rsi, macd, ema50, signal, reasons };
+      return { coin, price, change24h, rsi, macd, ema50, signal, reasons, source };
     });
 
     setLoading(100, 'DONE');
+    detectSignalChanges(results);
 
     setTimeout(() => {
       overlay.classList.add('hidden');
       renderCards(results);
       btn.disabled = false;
-
       const now = new Date();
       document.getElementById('last-updated').textContent =
         'UPDATED ' + now.toLocaleTimeString('en-US', { hour12: false });
@@ -730,7 +1119,7 @@ async function loadData() {
     overlay.classList.add('hidden');
     document.getElementById('error-area').innerHTML = `
       <div class="error-card">
-        ⚠ SIGNAL FETCH FAILED — ${err.message}. CoinGecko free API has rate limits. Wait 60s and retry.
+        ⚠ ALL APIS FAILED — ${err.message}. Wait 60s and retry.
       </div>`;
     btn.disabled = false;
   }
@@ -738,6 +1127,7 @@ async function loadData() {
 
 function renderCards(results) {
   const grid = document.getElementById('cards-grid');
+  grid.innerHTML = '';
 
   let buyCount = 0, holdCount = 0, sellCount = 0;
 
@@ -756,6 +1146,11 @@ function renderCards(results) {
     const macdLabel = r.macd === null ? 'N/A' : (r.macd > 0 ? '▲ BULLISH' : '▼ BEARISH');
     const emaClass = r.ema50 === null ? '' : r.price > r.ema50 ? 'bullish' : 'bearish';
     const emaLabel = r.ema50 === null ? 'N/A' : (r.price > r.ema50 ? '▲ ABOVE' : '▼ BELOW');
+
+    // Flash if signal just changed
+    const justChanged = prevSignals[r.coin.id] && alertHistory.length > 0 &&
+      alertHistory[0].symbol === r.coin.symbol &&
+      Date.now() - new Date().setSeconds(0,0) < 10000;
 
     const card = document.createElement('div');
     card.className = 'card';
@@ -806,6 +1201,8 @@ function renderCards(results) {
 setInterval(loadData, 5 * 60 * 1000);
 
 loadData();
+renderAlertHistory();
+updateNotifBtn();
 
 // Sticky footer ad dismiss
 function dismissStickyAd() {
