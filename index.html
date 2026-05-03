@@ -1233,9 +1233,15 @@ document.body.classList.add('has-sticky-ad');
 <script>
 (function() {
   try {
-    const key = 'signum_visits';
-    const count = (parseInt(localStorage.getItem(key) || '0')) + 1;
-    localStorage.setItem(key, count);
+    const visitKey = 'signum_visits';
+    const sessionKey = 'signum_session';
+    // Only increment if this is a new session (not a refresh)
+    if (!sessionStorage.getItem(sessionKey)) {
+      sessionStorage.setItem(sessionKey, '1');
+      const count = (parseInt(localStorage.getItem(visitKey) || '0')) + 1;
+      localStorage.setItem(visitKey, count);
+    }
+    const count = parseInt(localStorage.getItem(visitKey) || '1');
     const el = document.getElementById('visit-counter');
     if (el) el.textContent = 'VISITS: ' + count.toLocaleString();
   } catch(e) {}
